@@ -1,0 +1,32 @@
+
+body{
+    overflow-x: hidden;
+}
+nav{
+    margin-bottom: 30px;
+}
+.marginbot-30{
+    margin-bottom: 30px;
+}
+.card img{
+    height: 20em;
+    object-fit: contain;
+    /* background-color: grey; */
+}
+.card-text{
+    /* height: 15em; */
+}
+.card{
+    margin-right: auto;
+    padding: 0;
+    /* display: flex; */
+}
+.card-body{
+    margin-top: 10px;
+    background-color: rgb(197, 193, 193,0.4);
+    /* display: flex; */
+    /* flex-direction: column; */
+}
+.card-body .btn{
+    align-self: last baseline;
+}
