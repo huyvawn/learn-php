@@ -1,19 +1,32 @@
+<?php
+// 1 . Get parameter
+    $name = $_GET["q"];
+// 2. Connect db
+$host="localhost";
+$user ="root";
+$pass="root";
+$db="test-db";
+$conn= new mysqli($host,$user,$pass,$db);
+if($conn->error){
+    die("Connect refused!");
+}
+// 3. query db by parameter
+$sql = "select * from products where name LIKE '%$name%'";
+$result= $conn->query($sql);
+// 4. convert data to array
+$products =[];
+while($row = $result->fetch_assoc()){
+    $products[]=$row;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once("htmlsess2/head.php");?>
 <body>
-    <?php include_once("htmlsess2/nav.php");?>
-    <main>
-                <?php 
-                    $sql = "select * from products";
-                    $result = $conn->query($sql);
-                    $products = [];
-                    while ($row = $result->fetch_assoc()){
-                        $products[]= $row;
-                    }
-                    ?>
-        <div class="container">
-            <div class="row">
+<?php include_once("htmlsess2/nav.php");?>
+<main>
+    <div class="container">
+    <div class="row">
                 <?php foreach($products as $item):  ?>
                 <div class="col-3">
                 <div class="card mb-3 mt-3">
@@ -28,8 +41,7 @@
                 </div>
                 <?php endforeach; ?>
             </div>
-        </div>
-    </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    </div>
+</main>
 </body>
 </html>
