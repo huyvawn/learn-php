@@ -1,23 +1,12 @@
 <?php
+require_once("./functions/db.php");
 // 1 . Get parameter
     $id = $_GET["id"];
 // 2. Connect db
-$host="localhost";
-$user ="root";
-$pass="root";
-$db="test-db";
-$conn= new mysqli($host,$user,$pass,$db);
-if($conn->error){
-    die("Connect refused!");
-}
+
 // 3. query db by parameter
 $sql = "select * from products where category_id=$id";
-$result= $conn->query($sql);
-// 4. convert data to array
-$products =[];
-while($row = $result->fetch_assoc()){
-    $products[]=$row;
-}
+$products=select($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +24,7 @@ while($row = $result->fetch_assoc()){
     <h5 class="card-title"><?php echo $item["name"] ; ?></h5>
     <p>Price: $<?php echo $item["price"];?></p>
     <p class="card-text"><?php echo substr($item["description"],0,1000); ?></p>
-    <a href="#" class="btn btn-primary">Buy</a>
+    <a href="product.php?id=<?php echo $item["id"];?>" class="btn btn-primary">Buy</a>
   </div>
 </div>
                 </div>
