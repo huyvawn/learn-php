@@ -34,7 +34,7 @@ $products = select($sql);
     <h5 class="card-title"><?php echo $item["name"] ; ?></h5>
     <p>Price: $<?php echo $item["price"];?></p>
     <p class="card-text"><?php echo substr($item["description"],0,1000); ?></p>
-    <a href="#" class="btn btn-primary">Buy</a>
+    <a href="product.php?id=<?php echo $item["id"]; ?>" class="btn btn-primary">Buy</a>
   </div>
 </div>
                 </div>
