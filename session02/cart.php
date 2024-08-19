@@ -2,7 +2,7 @@
 require_once("functions/db.php");
 require_once("functions/cartfunction.php");
 session_start();
-$cart = isset($_SESSION["cart"])?$_SESSION["cart"]:[];
+// $cart = isset($_SESSION["cart"])?$_SESSION["cart"]:[];
 // foreach($cart as $key=>$item){
 //     echo"ID=$key -- buy_qty=$item<br/>";
     

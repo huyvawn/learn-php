@@ -2,8 +2,9 @@
 require_once("functions/db.php");
 require_once("functions/cartfunction.php");
 session_start();
-$cart = isset($_SESSION["cart"])?$_SESSION["cart"]:[];
+// $cart = isset($_SESSION["cart"])?$_SESSION["cart"]:[];
 $items= getCartItems();
+$grand_total=0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,64 +40,65 @@ $items= getCartItems();
             <div class="active col-3">Checkout</div>
             <div class="col-3">Finish</div>
         </div>
-        <form action="action.php" method="POST">
+        <form action="place_order.php" method="post">
             <div class="row">
-            <div class="billing-details col-6">
-                <h3>Billing Details</h3>
-            <!-- <div class="row">    -->
-                 <input type="text" name="name" placeholder="First & Last Name" required> 
-            <!-- </div> -->
-                <input type="email" name="email" placeholder="Email Address" required>
-                <div class="error-message">
-                    <!-- This will display error messages like "Please enter a valid email address" -->
-                    <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid_email') echo 'Please enter a valid email address.'; ?>
-                </div>
-                <select name="country" required>
-                    <option value="United States of America">United States of America</option>
-                    <option value="Vietnam">Viet Nam</option>
-                </select>
-                <input type="text" name="state" placeholder="State/County" required>
-                <input type="text" name="zip" placeholder="Zip/Postal Code" required>
+                <div class="col-7">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon1">Full name</span>
+                        <input type="text" name="customer_name" class="form-control" placeholder="Full name" aria-label="Username" aria-describedby="basic-addon1">
+                    </div>
 
-                <div class="payment-method">
-                    <h3>Payment Method</h3>
-                    <input class="input-radio" type="radio" name="payment_method" value="credit_card" checked> Credit Card
-                    <br>
-                    <input type="text" name="card_number" placeholder="Card Number" required>
-                    <select name="exp_month" required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <?php 
-                            foreach( range(3,12) as $index):
-                        ?>
-                          <option value="<?php echo $index;?>"><?php echo $index;?></option>
-                          <?php endforeach; ?>
-                    </select>
-                    <select name="exp_year" required>
-                        <option value="2024">2024</option>
-                        <option value="2025">2025</option>
-                        <?php foreach(range(2026,2032) as $index): ?>
-                            <option value="<?php echo $index;?>"><?php echo $index;?></option>
-                            <?php endforeach;?>
-                    </select>
-                    <input type="text" name="cvv" placeholder="Security Code" required>
-                    <br><br>
-                    <input class ="input-radio" type="radio" name="payment_method" value="paypal"> PayPal
-                    <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" alt="PayPal">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="basic-addon2">Email</span>
+                        <input type="text" name="email" class="form-control" placeholder="Email" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                        
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon3">Telephone</span>
+                            <input type="text" name="telephone" class="form-control" id="basic-url" aria-describedby="basic-addon3 basic-addon4">
+                        </div>
+                        <div class="form-text" id="basic-addon4">Example help text goes outside the input group.</div>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-text">Shipping address</span>
+                        <textarea name="shipping_address" class="form-control" aria-label="With textarea"></textarea>
+                    </div>
+                    <div class="mb=3">
+                        <h4>Payment method</h4>
+                        <div class="form-check">
+                            <input class="form-check-input" name="payment_method" value="COD" type="radio" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                COD
+                            </label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" name="payment_method" value="PAYPAL" type="radio" value="" id="flexCheckChecked" checked>
+                            <label class="form-check-label" for="flexCheckChecked">
+                                Paypal
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <ul>
+                        <?php foreach($items as $item): ?>
+                            <?php $grand_total +=  $item["buy_qty"] * $item["price"]; ?>
+                            <li>
+                                <p>
+                                    <?php echo $item["name"];?>
+                                    <b>(<?php echo $item["buy_qty"];?>x<?php echo $item["price"];?>)</b>
+                                    <span class="text-end">$<?php echo $item["buy_qty"] * $item["price"];?></span>
+                                </p>
+                            </li>
+                        <?php endforeach;?>
+                    </ul>
+                    <h3>Grand total: <?php echo $grand_total;?></h3>
+                    <button type="submit" class="btn btn-outline-danger">Place order</button>
                 </div>
             </div>
-            <div class="cart-summary col">
-                <h3>Cart Summary</h3>
-                <?php $total = 0; ?>
-                <?php foreach ($items as $product): ?>
-                <p><?php echo $product["buy_qty"];?> x <?php echo $product["name"];?> - $<?php echo $product["price"];?></p>
-                <?php $total += $product["buy_qty"] * $product["price"]; ?>
-                <?php endforeach;?>
-                <div class="subtotal">Subtotal: $<?php echo $total;?></div>
-            </div>
-            </div>
-        </form>
-        <button type="submit" class="place-order-btn">Place order</button>
+            </form>
     </div>
 </body>
 </html>

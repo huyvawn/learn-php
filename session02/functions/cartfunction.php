@@ -29,7 +29,7 @@ function getCartItems(){
         foreach ($products as $product) {
             $id = $product["id"];
             $product["buy_qty"] = $cart[$id];
-            $product["in_stock"] = $product["qty"] >= $product["buy_qty"]? "Yes":"Out of stock";
+            $product["in_stock"] = $product["qty"] >= $product["buy_qty"]? 'true':'false';
             $items[] = $product;
         }
 
