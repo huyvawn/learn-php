@@ -2,6 +2,7 @@
 session_start();
 require_once("functions/db.php");
 require_once("functions/cartfunction.php");
+require_once("functions/paypal.php");
 $customer_name= $_POST["customer_name"];
 $email= $_POST["email"];
 $telephone= $_POST["telephone"];
@@ -47,6 +48,21 @@ if($order_id != null){
         $sql="insert into orderitems(order_id,product_id,buy_qty,price)
                         VALUES($order_id,$product_id,$buy_qty,$price)";
         insert($sql);
+    }
+    if($payment_method == "PAYPAL"){
+        // thong tin tai khoan paypal
+        $client_id="AWVOFmi2WhUz2h3wfa_YUdoFF56V5EPAU8bXN_oS_Hxve78KuA5Eax37TgVWxBNLHKZYqQToc47IHSk1";
+        $client_secret="EO40732tnRAkSttoZadB2zv4dzhKzns3kdVonNYrfV0mGwS-fazWbjiWOJg4oFW510UGW19ZJUpg3U1r";
+        // url nhan ket qua
+        $success_url="http://localhost:8888/session02/success_paypal.php?order_id=$order_id";
+        $fail_url="http://localhost:8888/session02/fail_paypal.php?order_id=$order_id";
+        //tạo thanh toán
+        $access_token=get_access_token($client_id,$client_secret);
+        // nếu access ok thì tạo thanh toán
+        $payment=create_payment($access_token,$success_url,$fail_url,$grand_total);
+        // chuyển khách hàng sang trang thanh toán paypal
+        header("Location: ". $payment['links']['1']['href']);
+        die("A");
     }
     header("Location: thankyou.php");
     die();

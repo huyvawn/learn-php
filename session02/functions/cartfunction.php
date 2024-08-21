@@ -10,7 +10,7 @@ function getCartItems(){
             $ids[]= $key;
         }
         $ids= implode(",",$ids);
-        // $ids = "(1,2,4,5,6)";
+        // $ids = "1,2,4,5,6";
         $sql = "select * from products where id in ($ids)";
         $products= select($sql);
         // [
