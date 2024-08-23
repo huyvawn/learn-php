@@ -3,8 +3,7 @@
 require_once("functions/db.php");
 $order_id=$_GET["order_id"];
 $sql="update orders set paid = 1 where id = $order_id;";
-$conn=connect();
-$conn->query($sql);
+insert($sql);
 
 // chuyển về trang thank you
 header("Location: thankyou.php?order_id=$order_id");

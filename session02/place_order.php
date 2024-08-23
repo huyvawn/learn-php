@@ -46,9 +46,20 @@ if($order_id != null){
         $buy_qty = $item["buy_qty"];
         $price = $item["price"];
         $sql="insert into orderitems(order_id,product_id,buy_qty,price)
-                        VALUES($order_id,$product_id,$buy_qty,$price)";
+                        VALUES($order_id,$product_id,$buy_qty,$price);
+              ";
         insert($sql);
+        $sql_update = "update products set qty= qty-$buy_qty where id = $product_id;";
+        update($sql_update);
     }
+    $_SESSION["cart"] = null;
+    //send email to customer
+    $from_email= "huyvawn1@gmail.com";
+    $headers = "From: $from_email";
+    $subject= "Thông tin đơn hàng #$order_id";
+    $message=file_get_contents("mail/order_template.php");
+    mail($email,$subject,$message,$headers);
+
     if($payment_method == "PAYPAL"){
         // thong tin tai khoan paypal
         $client_id="AWVOFmi2WhUz2h3wfa_YUdoFF56V5EPAU8bXN_oS_Hxve78KuA5Eax37TgVWxBNLHKZYqQToc47IHSk1";
