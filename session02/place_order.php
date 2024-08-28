@@ -9,7 +9,7 @@ $telephone= $_POST["telephone"];
 $payment_method= $_POST["payment_method"];
 $shipping_address= $_POST["shipping_address"];
 
-// echo $customer_name;
+echo $customer_name;
 
 $items= getCartItems();
 if(count($items) == 0){
@@ -20,7 +20,9 @@ $grand_total = 0;
 foreach($items as $item){
     $grand_total += $item["price"] * $item["buy_qty"];
 }
+echo $grand_total;
 $now= date("Y-m-d H:i:s");
+echo $now;
 $sql= "insert into orders(created_at,
                         grand_total,
                         paid,
@@ -38,8 +40,10 @@ $sql= "insert into orders(created_at,
                         '$customer_name',
                         '$email',
                         '$telephone'
-                        )";
+                        );";
+
 $order_id= insert($sql);
+echo "checkpoint2";
 if($order_id != null){
     foreach($items as $item){
         $product_id= $item["id"];
@@ -57,24 +61,24 @@ if($order_id != null){
     $from_email= "huyvawn1@gmail.com";
     $headers = "From: $from_email";
     $subject= "Thông tin đơn hàng #$order_id";
-    $message=file_get_contents("mail/order_template.php");
-    mail($email,$subject,$message,$headers);
+    // $message=file_get_contents("mail/order_template.php");
+    // mail($email,$subject,$message,$headers);
 
-    if($payment_method == "PAYPAL"){
-        // thong tin tai khoan paypal
-        $client_id="AWVOFmi2WhUz2h3wfa_YUdoFF56V5EPAU8bXN_oS_Hxve78KuA5Eax37TgVWxBNLHKZYqQToc47IHSk1";
-        $client_secret="EO40732tnRAkSttoZadB2zv4dzhKzns3kdVonNYrfV0mGwS-fazWbjiWOJg4oFW510UGW19ZJUpg3U1r";
-        // url nhan ket qua
-        $success_url="http://localhost:8888/session02/success_paypal.php?order_id=$order_id";
-        $fail_url="http://localhost:8888/session02/fail_paypal.php?order_id=$order_id";
-        //tạo thanh toán
-        $access_token=get_access_token($client_id,$client_secret);
-        // nếu access ok thì tạo thanh toán
-        $payment=create_payment($access_token,$success_url,$fail_url,$grand_total);
-        // chuyển khách hàng sang trang thanh toán paypal
-        header("Location: ". $payment['links']['1']['href']);
-        die("A");
-    }
+    // if($payment_method == "PAYPAL"){
+    //     // thong tin tai khoan paypal
+    //     $client_id="AWVOFmi2WhUz2h3wfa_YUdoFF56V5EPAU8bXN_oS_Hxve78KuA5Eax37TgVWxBNLHKZYqQToc47IHSk1";
+    //     $client_secret="EO40732tnRAkSttoZadB2zv4dzhKzns3kdVonNYrfV0mGwS-fazWbjiWOJg4oFW510UGW19ZJUpg3U1r";
+    //     // url nhan ket qua
+    //     $success_url="http://localhost:8888/session02/success_paypal.php?order_id=$order_id";
+    //     $fail_url="http://localhost:8888/session02/fail_paypal.php?order_id=$order_id";
+    //     //tạo thanh toán
+    //     $access_token=get_access_token($client_id,$client_secret);
+    //     // nếu access ok thì tạo thanh toán
+    //     $payment=create_payment($access_token,$success_url,$fail_url,$grand_total);
+    //     // chuyển khách hàng sang trang thanh toán paypal
+    //     header("Location: ". $payment['links']['1']['href']);
+    //     die("A");
+    // }
     header("Location: thankyou.php");
     die();
 }
